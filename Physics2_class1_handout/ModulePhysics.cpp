@@ -36,13 +36,13 @@ bool ModulePhysics::Start()
 
 	// TODO 4: Create a a big static circle as "ground"
 	// In the .h also
+	// Arguments in pixels (and we convert them to meters)
 	b2BodyDef groundBodyDef;
-	groundBodyDef.position.Set(0.0f, -10.0f);
+	groundBodyDef.position.Set(PIXELS_TO_METERS(SCREEN_WIDTH / 2), PIXELS_TO_METERS(SCREEN_HEIGHT / 2));
 	groundBody = world->CreateBody(&groundBodyDef);
 	b2CircleShape circle;
-	// Arguments in pixels
-	circle.m_p.Set(PIXELS_TO_METERS(SCREEN_WIDTH / 2), PIXELS_TO_METERS(SCREEN_HEIGHT / 2));
-	circle.m_radius = PIXELS_TO_METERS(10);
+	// ? circle.m_p.Set
+	circle.m_radius = PIXELS_TO_METERS(250);
 	groundBody->CreateFixture(&circle, 0.0f);
 
 	return true;

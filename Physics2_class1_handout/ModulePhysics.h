@@ -2,8 +2,8 @@
 #include "Module.h"
 #include "Globals.h"
 
-#define METERS_TO_PIXELS( A ) A * 3779.5275590551      
-#define PIXELS_TO_METERS( A ) A / 3779.5275590551      
+#define METERS_TO_PIXELS( A ) A / 100
+#define PIXELS_TO_METERS( A ) A * 100  
 
 class b2World;
 class b2Body;
