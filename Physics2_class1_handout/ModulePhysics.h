@@ -2,6 +2,8 @@
 #include "Module.h"
 #include "Globals.h"
 
+#include "Box2D\Box2D\Box2D.h"
+
 #define METERS_TO_PIXELS( A ) A / 100
 #define PIXELS_TO_METERS( A ) A * 100  
 
@@ -23,5 +25,15 @@ private:
 	bool debug;
 	
 	b2World* world;
+
+	// Static big circle
+	b2BodyDef groundBodyDef;
 	b2Body* groundBody;
+	b2CircleShape sCircle;
+
+	// Dynamic little circle
+	b2BodyDef bodyDef;
+	b2Body* body;
+	b2CircleShape dCircle;
+	b2FixtureDef fixtureDef;
 };
