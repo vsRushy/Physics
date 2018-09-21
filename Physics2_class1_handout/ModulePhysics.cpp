@@ -42,7 +42,7 @@ bool ModulePhysics::Start()
 	b2CircleShape circle;
 	// Arguments in pixels
 	circle.m_p.Set(PIXELS_TO_METERS(SCREEN_WIDTH / 2), PIXELS_TO_METERS(SCREEN_HEIGHT / 2));
-	circle.m_radius = PIXELS_TO_METERS(100.0f);
+	circle.m_radius = PIXELS_TO_METERS(10);
 	groundBody->CreateFixture(&circle, 0.0f);
 
 	return true;
