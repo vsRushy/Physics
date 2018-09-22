@@ -4,8 +4,10 @@
 
 #include "Box2D\Box2D\Box2D.h"
 
-#define METERS_TO_PIXELS( A ) A / 100
-#define PIXELS_TO_METERS( A ) A * 100  
+// 1 meter = 100 pixels
+// Needs to be a float
+#define METERS_TO_PIXELS( A ) A / 0.01
+#define PIXELS_TO_METERS( A ) A * 0.01 
 
 class b2World;
 class b2Body;
@@ -25,6 +27,10 @@ private:
 	bool debug;
 	
 	b2World* world;
+
+	float32 timeStep = 1.0f / 60.0f;
+	int32 velocityIterations = 8;
+	int32 positionIterations = 3;
 
 	// Static big circle
 	b2BodyDef groundBodyDef;

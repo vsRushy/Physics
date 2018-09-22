@@ -14,9 +14,6 @@
 ModulePhysics::ModulePhysics(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
 	debug = true;
-	
-	b2Vec2 gravity(0.0f, -10.0f);
-	world = new b2World(gravity);
 }
 
 // Destructor
@@ -32,8 +29,15 @@ bool ModulePhysics::Start()
 	// - You need to send it a default gravity
 	// - You need init the world in the constructor
 	// - Remember to destroy the world after using it
-	// On the constructor (it can be here too)
-	
+	// Can be in the constructor too
+	b2Vec2 gravity(0.0f, 9.81f);
+	world = new b2World(gravity);
+
+	// Step
+	timeStep = 1.0f / 60.0f;
+	velocityIterations = 8;
+	positionIterations = 3;
+
 	// TODO 4: Create a a big static circle as "ground"
 	// In the .h also
 	// Arguments in pixels (and we convert them to meters)
@@ -50,9 +54,6 @@ bool ModulePhysics::Start()
 update_status ModulePhysics::PreUpdate()
 {
 	// TODO 3: Update the simulation ("step" the world)
-	float32 timeStep = 1.0f / 60.0f;
-	int32 velocityIterations = 8;
-	int32 positionIterations = 3;
 	world->Step(timeStep, velocityIterations, positionIterations);
 
 	return UPDATE_CONTINUE;
