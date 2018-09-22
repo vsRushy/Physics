@@ -28,9 +28,9 @@ private:
 	
 	b2World* world;
 
-	float32 timeStep = 1.0f / 60.0f;
-	int32 velocityIterations = 8;
-	int32 positionIterations = 3;
+	float32 timeStep;
+	int32 velocityIterations;
+	int32 positionIterations;
 
 	// Static big circle
 	b2BodyDef groundBodyDef;
