@@ -1,6 +1,7 @@
 #pragma once
 #include "Module.h"
 #include "Globals.h"
+#include "p2Point.h"
 
 #define GRAVITY_X 0.0f
 #define GRAVITY_Y -7.0f
@@ -18,7 +19,14 @@ class b2Body;
 // and has a method to request the position
 // then write the implementation in the .cpp
 // Then make your circle creation function to return a pointer to that class
+class PhysBody
+{
+public:
+	p2Point<float> GetPosition();
 
+public:
+	b2Body* body;
+};
 
 class ModulePhysics : public Module
 {
@@ -32,6 +40,9 @@ public:
 	bool CleanUp();
 
 	// TODO 3: Move body creation to 3 functions to create circles, rectangles and chains
+	void CreateCircle(float);
+	void CreateRectangle(float, float);
+	void CreateChain(int*, int);
 
 private:
 
