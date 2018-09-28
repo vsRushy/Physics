@@ -16,7 +16,11 @@
 
 p2Point<float> PhysBody::GetPosition()
 {
+	p2Point<float> pos;
+	pos.x = body->GetPosition().x;
+	pos.y = body->GetPosition().y;
 
+	return pos;
 }
 
 ModulePhysics::ModulePhysics(Application* app, bool start_enabled) : Module(app, start_enabled)
@@ -162,21 +166,24 @@ bool ModulePhysics::CleanUp()
 }
 
 
-void ModulePhysics::CreateCircle(float radius)
+PhysBody* ModulePhysics::CreateCircle(float radius)
 {
 	b2BodyDef body;
 	body.type = b2_dynamicBody;
 	radius = PIXEL_TO_METERS(25);
 	body.position.Set(PIXEL_TO_METERS(App->input->GetMouseX()), PIXEL_TO_METERS(App->input->GetMouseY()));
 
-	b2Body* b = world->CreateBody(&body);
+	PhysBody* b;
+	b->body = world->CreateBody(&body);
 
 	b2CircleShape shape;
 	shape.m_radius = radius;
 	b2FixtureDef fixture;
 	fixture.shape = &shape;
 
-	b->CreateFixture(&fixture);
+	b->body->CreateFixture(&fixture);
+
+	return b;
 }
 
 void ModulePhysics::CreateRectangle(float width, float height)

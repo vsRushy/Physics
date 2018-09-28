@@ -40,7 +40,7 @@ public:
 	bool CleanUp();
 
 	// TODO 3: Move body creation to 3 functions to create circles, rectangles and chains
-	void CreateCircle(float);
+	PhysBody* CreateCircle(float);
 	void CreateRectangle(float, float);
 	void CreateChain(int*, int);
 
