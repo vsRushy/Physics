@@ -22,6 +22,9 @@ public:
 	SDL_Texture* rick;
 
 private:
+	p2List<PhysBody*> physbody_list;
+
+private:
 	int points[24] = {
 		-38, 80,
 		-44, -54,
