@@ -90,6 +90,7 @@ update_status ModuleSceneIntro::Update()
 		int x, y;
 		item->data->GetPosition(x, y);
 		App->renderer->Blit(rick, x, y, NULL, 1.0f, item->data->GetRotation());
+		item = item->next;
 	}
 
 	return UPDATE_CONTINUE;
