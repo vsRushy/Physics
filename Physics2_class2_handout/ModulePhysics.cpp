@@ -21,6 +21,11 @@ void PhysBody::GetPosition(int& x, int& y) const
 	y = METERS_TO_PIXELS(pos.y) - height;
 }
 
+float PhysBody::GetRotation() const
+{
+	return RADTODEG * body->GetAngle();
+}
+
 ModulePhysics::ModulePhysics(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
 	world = NULL;

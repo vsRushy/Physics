@@ -26,6 +26,7 @@ public:
 
 public:
 	void GetPosition(int&, int&) const;
+	float GetRotation() const;
 
 public:
 	int width, height;

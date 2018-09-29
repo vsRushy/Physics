@@ -68,7 +68,7 @@ update_status ModuleSceneIntro::Update()
 	{
 		int x, y;
 		item->data->GetPosition(x, y);
-		App->renderer->Blit(circle, x, y, NULL, 1.0f);
+		App->renderer->Blit(circle, x, y, NULL, 1.0f, item->data->GetRotation());
 		item = item->next;
 	}
 
