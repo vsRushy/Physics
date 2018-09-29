@@ -232,7 +232,7 @@ PhysBody* ModulePhysics::CreateChain(int x, int y, int* points, int length)
 
 	b2BodyDef body;
 	body.type = b2_dynamicBody;
-	body.position.Set(PIXEL_TO_METERS(App->input->GetMouseX()), PIXEL_TO_METERS(App->input->GetMouseY()));
+	body.position.Set(PIXEL_TO_METERS(x), PIXEL_TO_METERS(y));
 	
 	b2Body* b = world->CreateBody(&body);
 	
