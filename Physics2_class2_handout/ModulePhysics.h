@@ -22,9 +22,13 @@ class b2Body;
 class PhysBody
 {
 public:
-	p2Point<float> GetPosition();
+	PhysBody() : body(nullptr) {}
 
 public:
+	void GetPosition(int&, int&) const;
+
+public:
+	int width, height;
 	b2Body* body;
 };
 
@@ -40,9 +44,9 @@ public:
 	bool CleanUp();
 
 	// TODO 3: Move body creation to 3 functions to create circles, rectangles and chains
-	PhysBody* CreateCircle(float);
-	void CreateRectangle(float, float);
-	void CreateChain(int*, int);
+	PhysBody* CreateCircle(int, int, int);
+	PhysBody* CreateRectangle(int, int, int, int);
+	PhysBody* CreateChain(int, int, int*, int);
 
 private:
 

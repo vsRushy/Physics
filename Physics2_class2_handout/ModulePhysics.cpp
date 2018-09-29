@@ -14,13 +14,11 @@
 #pragma comment( lib, "Box2D/libx86/Release/Box2D.lib" )
 #endif
 
-p2Point<float> PhysBody::GetPosition()
+void PhysBody::GetPosition(int& x, int& y) const
 {
-	p2Point<float> pos;
-	pos.x = body->GetPosition().x;
-	pos.y = body->GetPosition().y;
-
-	return pos;
+	b2Vec2 pos = body->GetPosition();
+	x = METERS_TO_PIXELS(pos.x) - width;
+	y = METERS_TO_PIXELS(pos.y) - height;
 }
 
 ModulePhysics::ModulePhysics(Application* app, bool start_enabled) : Module(app, start_enabled)
@@ -166,69 +164,87 @@ bool ModulePhysics::CleanUp()
 }
 
 
-PhysBody* ModulePhysics::CreateCircle(float radius)
+PhysBody* ModulePhysics::CreateCircle(int x, int y, int radius)
 {
 	b2BodyDef body;
 	body.type = b2_dynamicBody;
-	radius = PIXEL_TO_METERS(25);
-	body.position.Set(PIXEL_TO_METERS(App->input->GetMouseX()), PIXEL_TO_METERS(App->input->GetMouseY()));
+	body.position.Set(PIXEL_TO_METERS(x), PIXEL_TO_METERS(y));
 
-	PhysBody* b;
-	b->body = world->CreateBody(&body);
+	b2Body* b;
+	b = world->CreateBody(&body);
 
 	b2CircleShape shape;
-	shape.m_radius = radius;
+	shape.m_radius = PIXEL_TO_METERS(radius);
+	
 	b2FixtureDef fixture;
 	fixture.shape = &shape;
+	fixture.density = 1.0f;
 
-	b->body->CreateFixture(&fixture);
+	b->CreateFixture(&fixture);
 
-	return b;
+	PhysBody* pBody = new PhysBody();
+	pBody->body = b;
+	pBody->width = pBody->height = radius;
+
+	return pBody;
 }
 
-void ModulePhysics::CreateRectangle(float width, float height)
+PhysBody* ModulePhysics::CreateRectangle(int x, int y, int width, int height)
 {
 	// TODO 1: When pressing 2, create a box on the mouse position
 	// To have the box behave normally, set fixture's density to 1.0f
 	b2BodyDef body;
 	body.type = b2_dynamicBody;
-	width = PIXEL_TO_METERS(30);
-	height = PIXEL_TO_METERS(20);
-	body.position.Set(PIXEL_TO_METERS(App->input->GetMouseX()), PIXEL_TO_METERS(App->input->GetMouseY()));
+	body.position.Set(PIXEL_TO_METERS(x), PIXEL_TO_METERS(y));
+	
 	b2Body* b = world->CreateBody(&body);
+
 	b2PolygonShape shape;
-	shape.SetAsBox(width, height);
+	shape.SetAsBox(PIXEL_TO_METERS(width), PIXEL_TO_METERS(height));
+
 	b2FixtureDef fixture;
 	fixture.shape = &shape;
 	fixture.density = 1.0f;
 
 	b->CreateFixture(&fixture);
+
+	PhysBody* pBody = new PhysBody();
+	pBody->body = b;
+	pBody->width = width;
+	pBody->height = height;
+
+	return pBody;
 }
 
-void ModulePhysics::CreateChain(int* points, int length)
+PhysBody* ModulePhysics::CreateChain(int x, int y, int* points, int length)
 {
 	b2Vec2* vec = new b2Vec2[length / 2];
-	uint x = 0;
-	uint y = 1;
 	for (uint i = 0; i < length / 2; i++)
 	{
-		vec[i].x = PIXEL_TO_METERS(points[x]);
-		vec[i].y = PIXEL_TO_METERS(points[y]);
-		x += 2;
-		y += 2;
+		vec[i].x = PIXEL_TO_METERS(points[i * 2]);
+		vec[i].y = PIXEL_TO_METERS(points[i * 2 + 1]);
 	}
 
 	b2BodyDef body;
 	body.type = b2_dynamicBody;
 	body.position.Set(PIXEL_TO_METERS(App->input->GetMouseX()), PIXEL_TO_METERS(App->input->GetMouseY()));
+	
 	b2Body* b = world->CreateBody(&body);
+	
 	b2ChainShape shape;
 	shape.CreateLoop(vec, length / 2);
+	
 	b2FixtureDef fixture;
 	fixture.shape = &shape;
 	fixture.density = 1.0f;
 
 	b->CreateFixture(&fixture);
 
+	PhysBody* pBody = new PhysBody();
+	pBody->body = b;
+	pBody->width = pBody->height = 0;
+
 	delete vec;
+
+	return pBody;
 }
