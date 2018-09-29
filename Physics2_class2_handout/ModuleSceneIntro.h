@@ -22,7 +22,9 @@ public:
 	SDL_Texture* rick;
 
 private:
-	p2List<PhysBody*> physbody_list;
+	p2List<PhysBody*> circles_list;
+	p2List<PhysBody*> boxes_list;
+	p2List<PhysBody*> ricks_list;
 
 private:
 	int points[24] = {

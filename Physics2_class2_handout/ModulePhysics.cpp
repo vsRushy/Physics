@@ -205,7 +205,7 @@ PhysBody* ModulePhysics::CreateRectangle(int x, int y, int width, int height)
 	b2Body* b = world->CreateBody(&body);
 
 	b2PolygonShape shape;
-	shape.SetAsBox(PIXEL_TO_METERS(width), PIXEL_TO_METERS(height));
+	shape.SetAsBox(PIXEL_TO_METERS(width) / 2, PIXEL_TO_METERS(height) / 2);
 
 	b2FixtureDef fixture;
 	fixture.shape = &shape;
@@ -215,8 +215,8 @@ PhysBody* ModulePhysics::CreateRectangle(int x, int y, int width, int height)
 
 	PhysBody* pBody = new PhysBody();
 	pBody->body = b;
-	pBody->width = width;
-	pBody->height = height;
+	pBody->width = width / 2;
+	pBody->height = height / 2;
 
 	return pBody;
 }
@@ -241,7 +241,6 @@ PhysBody* ModulePhysics::CreateChain(int x, int y, int* points, int length)
 	
 	b2FixtureDef fixture;
 	fixture.shape = &shape;
-	fixture.density = 1.0f;
 
 	b->CreateFixture(&fixture);
 
