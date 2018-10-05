@@ -278,7 +278,21 @@ int PhysBody::RayCast(int x1, int y1, int x2, int y2, float& normal_x, float& no
 	// if hit, fill normal_x and normal_y and return the distance between x1,y1 and its colliding point
 	int ret = -1;
 
-	
+	b2RayCastInput input;
+	b2RayCastOutput output;
+
+	input.p1 = b2Vec2(PIXEL_TO_METERS(x1), PIXEL_TO_METERS(y1));
+	input.p2 = b2Vec2(PIXEL_TO_METERS(x2), PIXEL_TO_METERS(y2));
+
+	for (b2Fixture* fixture = body->GetFixtureList(); fixture; fixture->GetNext())
+	{
+		b2Shape* shape = fixture->GetShape();
+		if (shape->RayCast(&output, input, body->GetTransform(), )) 
+		{
+			
+			return ret;
+		}
+	}
 	
 	return ret;
 }
