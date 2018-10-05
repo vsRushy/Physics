@@ -154,7 +154,7 @@ update_status ModulePhysics::PostUpdate()
 {
 	if(App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
 		debug = !debug;
-
+	
 	if(!debug)
 		return UPDATE_CONTINUE;
 
@@ -261,7 +261,13 @@ bool PhysBody::Contains(int x, int y) const
 {
 	// TODO 1: Write the code to return true in case the point
 	// is inside ANY of the shapes contained by this body
-	
+	for (b2Fixture* fixture = body->GetFixtureList(); fixture; fixture->GetNext())
+	{
+		b2Vec2 point(PIXEL_TO_METERS(x), PIXEL_TO_METERS(y));
+		b2Shape* shape = fixture->GetShape();
+		if (shape->TestPoint(body->GetTransform(), point))
+			return true;
+	}
 
 	return false;
 }
@@ -272,6 +278,8 @@ int PhysBody::RayCast(int x1, int y1, int x2, int y2, float& normal_x, float& no
 	// if hit, fill normal_x and normal_y and return the distance between x1,y1 and its colliding point
 	int ret = -1;
 
+	
+	
 	return ret;
 }
 
