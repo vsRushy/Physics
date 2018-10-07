@@ -304,6 +304,13 @@ int PhysBody::RayCast(int x1, int y1, int x2, int y2, float& normal_x, float& no
 void ModulePhysics::BeginContact(b2Contact* contact)
 {
 	LOG("Contact");
+	// TODO 7: Call the listeners that are not NULL
+	PhysBody* a = (PhysBody*)contact->GetFixtureA()->GetBody()->GetUserData();
+	PhysBody* b = (PhysBody*)contact->GetFixtureB()->GetBody()->GetUserData();
+
+	if(a->collision_listener != nullptr)
+		a->collision_listener->OnCollision(a, b);
+	if (b->collision_listener != nullptr)
+	b->collision_listener->OnCollision(b, a);
 }
 
-// TODO 7: Call the listeners that are not NULL

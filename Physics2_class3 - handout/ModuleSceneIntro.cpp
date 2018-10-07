@@ -48,6 +48,7 @@ update_status ModuleSceneIntro::Update()
 	{
 		circles.add(App->physics->CreateCircle(App->input->GetMouseX(), App->input->GetMouseY(), 25));
 		// TODO 8: Make sure to add yourself as collision callback to the circle you creates
+		circles.getLast()->data->collision_listener = this;
 	}
 
 	if(App->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN)
@@ -131,3 +132,7 @@ update_status ModuleSceneIntro::Update()
 }
 
 // TODO 8: Now just define collision callback for the circle and play bonus_fx audio
+void ModuleSceneIntro::OnCollision(PhysBody* a, PhysBody* b)
+{
+
+}
