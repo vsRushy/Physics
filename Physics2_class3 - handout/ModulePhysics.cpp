@@ -31,6 +31,7 @@ bool ModulePhysics::Start()
 
 	world = new b2World(b2Vec2(GRAVITY_X, -GRAVITY_Y));
 	// TODO 3: You need to make ModulePhysics class a contact listener
+	world->SetContactListener(this);
 
 	// big static circle as "ground" in the middle of the screen
 	int x = SCREEN_WIDTH / 2;
@@ -84,8 +85,8 @@ PhysBody* ModulePhysics::CreateCircle(int x, int y, int radius)
 
 	b->CreateFixture(&fixture);
 
-	// TODO 4: Add a pointer to PhysBody as UserData to the body
 	PhysBody* pbody = new PhysBody();
+	b->SetUserData(pbody); // TODO 4: Add a pointer to PhysBody as UserData to the body
 	pbody->body = b;
 	pbody->width = pbody->height = radius;
 
@@ -300,5 +301,9 @@ int PhysBody::RayCast(int x1, int y1, int x2, int y2, float& normal_x, float& no
 }
 
 // TODO 3
+void ModulePhysics::BeginContact(b2Contact* contact)
+{
+	LOG("Contact");
+}
 
 // TODO 7: Call the listeners that are not NULL

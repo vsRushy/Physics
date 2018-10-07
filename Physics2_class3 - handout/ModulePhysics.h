@@ -1,6 +1,7 @@
 #pragma once
 #include "Module.h"
 #include "Globals.h"
+#include "Box2D/Box2D/Box2D.h"
 
 #define GRAVITY_X 0.0f
 #define GRAVITY_Y -7.0f
@@ -10,9 +11,6 @@
 
 #define METERS_TO_PIXELS(m) ((int) floor(PIXELS_PER_METER * m))
 #define PIXEL_TO_METERS(p)  ((float) METER_PER_PIXEL * p)
-
-class b2World;
-class b2Body;
 
 // Small class to return to other modules to track position and rotation of physics bodies
 class PhysBody
@@ -35,7 +33,7 @@ public:
 // Module --------------------------------------
 // TODO 3: Make module physics inherit from b2ContactListener
 // then override void BeginContact(b2Contact* contact)
-class ModulePhysics : public Module
+class ModulePhysics : public Module, public b2ContactListener
 {
 public:
 	ModulePhysics(Application* app, bool start_enabled = true);
@@ -51,6 +49,8 @@ public:
 	// TODO: Homework - create a sensor
 	// PhysBody* CreateRectangleSensor(int x, int y, int width, int height);
 	PhysBody* CreateChain(int x, int y, int* points, int size);
+
+	void BeginContact(b2Contact* contact);
 
 private:
 
