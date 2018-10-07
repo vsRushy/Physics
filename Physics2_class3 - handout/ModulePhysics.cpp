@@ -261,11 +261,10 @@ bool PhysBody::Contains(int x, int y) const
 {
 	// TODO 1: Write the code to return true in case the point
 	// is inside ANY of the shapes contained by this body
+	b2Vec2 point(PIXEL_TO_METERS(x), PIXEL_TO_METERS(y));
 	for (b2Fixture* fixture = body->GetFixtureList(); fixture; fixture->GetNext())
 	{
-		b2Vec2 point(PIXEL_TO_METERS(x), PIXEL_TO_METERS(y));
-		b2Shape* shape = fixture->GetShape();
-		if (shape->TestPoint(body->GetTransform(), point))
+		if (fixture->GetShape()->TestPoint(body->GetTransform(), point))
 			return true;
 	}
 
@@ -280,17 +279,20 @@ int PhysBody::RayCast(int x1, int y1, int x2, int y2, float& normal_x, float& no
 
 	b2RayCastInput input;
 	b2RayCastOutput output;
-
-	input.p1 = b2Vec2(PIXEL_TO_METERS(x1), PIXEL_TO_METERS(y1));
-	input.p2 = b2Vec2(PIXEL_TO_METERS(x2), PIXEL_TO_METERS(y2));
+	
+	input.p1.Set(PIXEL_TO_METERS(x1), PIXEL_TO_METERS(y1));
+	input.p2.Set(PIXEL_TO_METERS(x2), PIXEL_TO_METERS(y2));
+	input.maxFraction = 1.0f;
 
 	for (b2Fixture* fixture = body->GetFixtureList(); fixture; fixture->GetNext())
 	{
-		b2Shape* shape = fixture->GetShape();
-		if (shape->RayCast(&output, input, body->GetTransform(), )) 
+		if (fixture->GetShape()->RayCast(&output, input, body->GetTransform(), 0)) 
 		{
-			
-			return ret;
+			float dx = x2 - x1;
+			float dy = y2 - y1;
+			float dist = sqrtf((dx * dx) + (dy * dy));
+
+			return output.fraction * dist;
 		}
 	}
 	
