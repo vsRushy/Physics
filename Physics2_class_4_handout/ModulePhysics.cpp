@@ -44,7 +44,7 @@ bool ModulePhysics::Start()
 	body.type = b2_staticBody;
 	body.position.Set(PIXEL_TO_METERS(x), PIXEL_TO_METERS(y));
 
-	b2Body* big_ball = world->CreateBody(&body);
+	big_ball = world->CreateBody(&body);
 
 	b2CircleShape shape;
 	shape.m_radius = PIXEL_TO_METERS(diameter) * 0.5f;
@@ -194,6 +194,9 @@ update_status ModulePhysics::PostUpdate()
 	if(!debug)
 		return UPDATE_CONTINUE;
 
+	b2Body* body_clicked = nullptr;
+	b2Vec2 mouse_position = { PIXEL_TO_METERS(App->input->GetMouseX()), PIXEL_TO_METERS(App->input->GetMouseY()) };
+
 	// Bonus code: this will iterate all objects in the world and draw the circles
 	// You need to provide your own macro to translate meters to pixels
 	for(b2Body* b = world->GetBodyList(); b; b = b->GetNext())
@@ -265,8 +268,14 @@ update_status ModulePhysics::PostUpdate()
 			}
 
 			// TODO 1: If mouse button 1 is pressed ...
-			// App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN
-			// test if the current body contains mouse position
+			if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN)
+			{
+				// test if the current body contains mouse position
+				if (f->TestPoint(mouse_position))
+				{
+					body_clicked = b;
+				}
+			}
 		}
 	}
 
@@ -274,12 +283,69 @@ update_status ModulePhysics::PostUpdate()
 	// so we can pull it around
 	// TODO 2: If a body was selected, create a mouse joint
 	// using mouse_joint class property
+	if (body_clicked != nullptr)
+	{
+		b2MouseJointDef def;
+		def.bodyA = ground;
+		def.bodyB = body_clicked;
+		def.target = mouse_position;
+		def.dampingRatio = 0.5f;
+		def.frequencyHz = 2.0f;
+		def.maxForce = 100.0f * body_clicked->GetMass();
 
+		mouse_joint = (b2MouseJoint*)world->CreateJoint(&def);
+
+
+		b2DistanceJointDef distance_def;
+
+		distance_def.Initialize(big_ball, body_clicked, big_ball->GetWorldCenter(), body_clicked->GetWorldCenter());
+		distance_def.dampingRatio = 0.5f;
+		distance_def.frequencyHz = 2.0f;
+
+		distance_joint = (b2DistanceJoint*)world->CreateJoint(&distance_def);
+
+		// Motor joint
+		b2MotorJointDef motor_def;
+		motor_def.Initialize(big_ball, body_clicked);
+
+		motor_def.maxForce = 50.0f;
+		motor_def.maxTorque = 0.0f;
+	}
 
 	// TODO 3: If the player keeps pressing the mouse button, update
 	// target position and draw a red line between both anchor points
+	
+	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT && mouse_joint != nullptr) {
+
+		b2Vec2 anchorA = mouse_joint->GetBodyB()->GetPosition();
+
+		mouse_joint->SetTarget(mouse_position);
+		b2Vec2 anchorB = mouse_joint->GetTarget();
+
+		App->renderer->DrawLine(METERS_TO_PIXELS(anchorA.x), METERS_TO_PIXELS(anchorA.y), METERS_TO_PIXELS(anchorB.x), METERS_TO_PIXELS(anchorB.y), 255, 0, 0);
+	}
+
+	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT && distance_joint != nullptr) {
+
+		b2Vec2 anchorA = distance_joint->GetBodyA()->GetPosition();
+		b2Vec2 anchorB = distance_joint->GetBodyB()->GetPosition();
+
+		App->renderer->DrawLine(METERS_TO_PIXELS(anchorA.x), METERS_TO_PIXELS(anchorA.y), METERS_TO_PIXELS(anchorB.x), METERS_TO_PIXELS(anchorB.y), 255, 0, 0);
+	}
 
 	// TODO 4: If the player releases the mouse button, destroy the joint
+	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_UP) {
+
+		if (mouse_joint != nullptr) {
+			world->DestroyJoint(mouse_joint);
+			mouse_joint = nullptr;
+		}
+
+		if (distance_joint != nullptr) {
+		world->DestroyJoint(distance_joint);
+		distance_joint = nullptr;
+		}
+	}
 
 	return UPDATE_CONTINUE;
 }
