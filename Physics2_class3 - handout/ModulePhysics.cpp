@@ -308,9 +308,9 @@ void ModulePhysics::BeginContact(b2Contact* contact)
 	PhysBody* a = (PhysBody*)contact->GetFixtureA()->GetBody()->GetUserData();
 	PhysBody* b = (PhysBody*)contact->GetFixtureB()->GetBody()->GetUserData();
 
-	if(a->collision_listener != nullptr)
+	if(a && a->collision_listener != NULL)
 		a->collision_listener->OnCollision(a, b);
-	if (b->collision_listener != nullptr)
-	b->collision_listener->OnCollision(b, a);
+	if(b && b->collision_listener != NULL)
+		b->collision_listener->OnCollision(b, a);
 }
 

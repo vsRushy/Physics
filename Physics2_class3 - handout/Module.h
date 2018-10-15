@@ -69,7 +69,7 @@ public:
 
 	virtual bool CleanUp() 
 	{ 
-		return true; 
+		return true;
 	}
 
 	// TODO 5: Create a OnCollision method that receives both PhysBodies
