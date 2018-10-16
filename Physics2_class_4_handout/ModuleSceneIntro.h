@@ -22,6 +22,8 @@ public:
 	p2List<PhysBody*> boxes;
 	p2List<PhysBody*> ricks;
 
+	PhysBody* sensor;
+
 	SDL_Texture* circle;
 	SDL_Texture* box;
 	SDL_Texture* rick;
