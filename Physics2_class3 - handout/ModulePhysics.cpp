@@ -60,11 +60,11 @@ update_status ModulePhysics::PreUpdate()
 	world->Step(1.0f / 60.0f, 6, 2);
 
 	// TODO: HomeWork
-	/*
 	for(b2Contact* c = world->GetContactList(); c; c = c->GetNext())
 	{
+
 	}
-	*/
+	
 
 	return UPDATE_CONTINUE;
 }
@@ -110,6 +110,7 @@ PhysBody* ModulePhysics::CreateRectangle(int x, int y, int width, int height)
 	b->CreateFixture(&fixture);
 
 	PhysBody* pbody = new PhysBody();
+	b->SetUserData(pbody);
 	pbody->body = b;
 	pbody->width = width * 0.5f;
 	pbody->height = height * 0.5f;
@@ -144,8 +145,36 @@ PhysBody* ModulePhysics::CreateChain(int x, int y, int* points, int size)
 	delete p;
 
 	PhysBody* pbody = new PhysBody();
+	b->SetUserData(pbody);
 	pbody->body = b;
 	pbody->width = pbody->height = 0;
+
+	return pbody;
+}
+
+PhysBody* ModulePhysics::CreateRectangleSensor(int x, int y, int width, int height)
+{
+	b2BodyDef body;
+	body.type = b2_dynamicBody;
+	body.position.Set(PIXEL_TO_METERS(x), PIXEL_TO_METERS(y));
+
+	b2Body* b = world->CreateBody(&body);
+
+	b2PolygonShape box;
+	box.SetAsBox(PIXEL_TO_METERS(width) * 0.5f, PIXEL_TO_METERS(height) * 0.5f);
+
+	b2FixtureDef fixture;
+	fixture.shape = &box;
+	fixture.isSensor = true;
+	fixture.density = 1.0f;
+
+	b->CreateFixture(&fixture);
+
+	PhysBody* pbody = new PhysBody();
+	b->SetUserData(pbody);
+	pbody->body = b;
+	pbody->width = width * 0.5f;
+	pbody->height = height * 0.5f;
 
 	return pbody;
 }

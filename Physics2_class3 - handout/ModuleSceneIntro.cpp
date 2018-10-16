@@ -29,6 +29,7 @@ bool ModuleSceneIntro::Start()
 	bonus_fx = App->audio->LoadFx("pinball/bonus.wav");
 
 	// TODO: Homework - create a sensor
+	sensor = App->physics->CreateRectangleSensor(100, 100, 100, 100);
 
 	return ret;
 }
@@ -37,6 +38,9 @@ bool ModuleSceneIntro::Start()
 bool ModuleSceneIntro::CleanUp()
 {
 	LOG("Unloading Intro scene");
+	App->textures->Unload(circle);
+	App->textures->Unload(box);
+	App->textures->Unload(rick);
 
 	return true;
 }
@@ -134,5 +138,5 @@ update_status ModuleSceneIntro::Update()
 // TODO 8: Now just define collision callback for the circle and play bonus_fx audio
 void ModuleSceneIntro::OnCollision(PhysBody* a, PhysBody* b)
 {
-
+	if(a->body == App->)
 }
