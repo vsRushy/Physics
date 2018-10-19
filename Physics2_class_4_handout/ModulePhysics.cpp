@@ -294,22 +294,6 @@ update_status ModulePhysics::PostUpdate()
 		def.maxForce = 100.0f * body_clicked->GetMass();
 
 		mouse_joint = (b2MouseJoint*)world->CreateJoint(&def);
-
-
-		b2DistanceJointDef distance_def;
-
-		distance_def.Initialize(big_ball, body_clicked, big_ball->GetWorldCenter(), body_clicked->GetWorldCenter());
-		distance_def.dampingRatio = 0.5f;
-		distance_def.frequencyHz = 2.0f;
-
-		distance_joint = (b2DistanceJoint*)world->CreateJoint(&distance_def);
-
-		// Motor joint
-		b2MotorJointDef motor_def;
-		motor_def.Initialize(big_ball, body_clicked);
-
-		motor_def.maxForce = 50.0f;
-		motor_def.maxTorque = 0.0f;
 	}
 
 	// TODO 3: If the player keeps pressing the mouse button, update
@@ -325,25 +309,12 @@ update_status ModulePhysics::PostUpdate()
 		App->renderer->DrawLine(METERS_TO_PIXELS(anchorA.x), METERS_TO_PIXELS(anchorA.y), METERS_TO_PIXELS(anchorB.x), METERS_TO_PIXELS(anchorB.y), 255, 0, 0);
 	}
 
-	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT && distance_joint != nullptr) {
-
-		b2Vec2 anchorA = distance_joint->GetBodyA()->GetPosition();
-		b2Vec2 anchorB = distance_joint->GetBodyB()->GetPosition();
-
-		App->renderer->DrawLine(METERS_TO_PIXELS(anchorA.x), METERS_TO_PIXELS(anchorA.y), METERS_TO_PIXELS(anchorB.x), METERS_TO_PIXELS(anchorB.y), 255, 0, 0);
-	}
-
 	// TODO 4: If the player releases the mouse button, destroy the joint
 	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_UP) {
 
 		if (mouse_joint != nullptr) {
 			world->DestroyJoint(mouse_joint);
 			mouse_joint = nullptr;
-		}
-
-		if (distance_joint != nullptr) {
-		world->DestroyJoint(distance_joint);
-		distance_joint = nullptr;
 		}
 	}
 
