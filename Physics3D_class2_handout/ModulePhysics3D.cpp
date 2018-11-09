@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "ModulePhysics3D.h"
 #include "Primitive.h"
+#include "ModuleCamera3D.h"
 
 // TODO 1: ...and the 3 libraries based on how we compile (Debug or Release)
 // use the _DEBUG preprocessor define
@@ -92,6 +93,15 @@ update_status ModulePhysics3D::Update(float dt)
 		if(App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
 		{
 			// TODO 6: Create a Solid Sphere when pressing 1 on camera position
+			btTransform t;
+			t.setFromOpenGLMatrix(App->camera->GetViewMatrix());
+			btMotionState* motionState = new btDefaultMotionState(t);
+			btSphereShape* shape = new btSphereShape(10.0f);
+
+			btRigidBody::btRigidBodyConstructionInfo rigidBodyInfo(0.0f, motionState, shape);
+			btRigidBody* rigidBody = new btRigidBody(rigidBodyInfo);
+
+			world->addRigidBody(rigidBody);
 		}
 	}
 
