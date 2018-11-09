@@ -58,10 +58,14 @@ bool ModulePhysics3D::Start()
 	// Uncomment this line to have the world use our debug drawer
 	world->setDebugDrawer(debug_draw);
 
-	{
-		// TODO 5: Create a big rectangle as ground
-		// Big rectangle as ground
-	}
+	// TODO 5: Create a big rectangle as ground
+	btMotionState* motionState = new btDefaultMotionState();
+	btBoxShape* shape = new btBoxShape(btVector3(100.0f, 1.0f, 100.0f));
+
+	btRigidBody::btRigidBodyConstructionInfo rigidBodyInfo(0.0f, motionState, shape);
+	btRigidBody* rigidBody = new btRigidBody(rigidBodyInfo);
+
+	world->addRigidBody(rigidBody);
 
 	return true;
 }
@@ -70,7 +74,7 @@ bool ModulePhysics3D::Start()
 update_status ModulePhysics3D::PreUpdate(float dt)
 {
 	// TODO 4: step the world
-
+	world->stepSimulation(dt);
 
 	return UPDATE_CONTINUE;
 }
