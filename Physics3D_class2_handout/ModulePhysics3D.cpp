@@ -6,17 +6,32 @@
 // TODO 1: ...and the 3 libraries based on how we compile (Debug or Release)
 // use the _DEBUG preprocessor define
 
+#ifdef _DEBUG
+#pragma comment(lib, "Bullet/libx86/BulletDynamics_debug.lib")
+#pragma comment(lib, "Bullet/libx86/BulletCollision_debug.lib")
+#pragma comment(lib, "Bullet/libx86/LinearMath_debug.lib")
+#else
+#pragma comment(lib, "Bullet/libx86/BulletDynamics.lib")
+#pragma comment(lib, "Bullet/libx86/BulletCollision.lib")
+#pragma comment(lib, "Bullet/libx86/LinearMath.lib")
+#endif
+
 ModulePhysics3D::ModulePhysics3D(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
 	debug_draw = NULL;
 	debug = true;
-
+	
 	// TODO 2: Create collision configuration, dispacher
 	// broad _phase and solver
+	collisionConfiguration = new btDefaultCollisionConfiguration();
+	dispatcher = new btCollisionDispatcher(collisionConfiguration);
+	pairCache = new btDbvtBroadphase();
+	constraintSolver = new btSequentialImpulseConstraintSolver();
 
 	// Uncomment this to enable debug drawer
-	//debug_draw = new DebugDrawer();
+	debug_draw = new DebugDrawer();
 }
+
 
 // Destructor
 ModulePhysics3D::~ModulePhysics3D()
@@ -24,7 +39,10 @@ ModulePhysics3D::~ModulePhysics3D()
 	delete debug_draw;
 
 	// TODO 2: and destroy them!
-
+	delete dispatcher;
+	delete pairCache;
+	delete constraintSolver;
+	delete collisionConfiguration;
 }
 
 // ---------------------------------------------------------
@@ -34,9 +52,11 @@ bool ModulePhysics3D::Start()
 
 	// TODO 3: Create the world and set default gravity
 	// Have gravity defined in a macro!
+	world = new btDiscreteDynamicsWorld(dispatcher, pairCache, constraintSolver, collisionConfiguration);
+	world->setGravity(btVector3(GRAVITY_X, -GRAVITY_Y, 0));
 
 	// Uncomment this line to have the world use our debug drawer
-	// world->setDebugDrawer(debug_draw);
+	world->setDebugDrawer(debug_draw);
 
 	{
 		// TODO 5: Create a big rectangle as ground
@@ -51,6 +71,7 @@ update_status ModulePhysics3D::PreUpdate(float dt)
 {
 	// TODO 4: step the world
 
+
 	return UPDATE_CONTINUE;
 }
 
@@ -62,7 +83,7 @@ update_status ModulePhysics3D::Update(float dt)
 
 	if(debug == true)
 	{
-		//world->debugDrawWorld();
+		world->debugDrawWorld();
 		
 		if(App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
 		{
@@ -85,12 +106,12 @@ bool ModulePhysics3D::CleanUp()
 	LOG("Destroying 3D Physics simulation");
 
 	// TODO 3: ... and destroy the world here!
+	delete world;
 
 	return true;
 }
 
 // =============================================
-/*
 void DebugDrawer::drawLine(const btVector3& from, const btVector3& to, const btVector3& color)
 {
 	line.origin.Set(from.getX(), from.getY(), from.getZ());
@@ -125,4 +146,3 @@ int	 DebugDrawer::getDebugMode() const
 {
 	return mode;
 }
-*/
