@@ -22,9 +22,9 @@ bool ModuleSceneIntro::Start()
 
 	// TODO 3: create a sphere in the world with a primitive
 	// and create a physics body for it. Remember to render it in Update()
-	b->SetPos(0, 4.0f, 0.0f);
-	b = App->physics->AddBody(sphere, 10.0f);
+	sphere.radius = 1.0f;
 	sphere.SetPos(0.0f, 4.0f, 0.0f);
+	b = App->physics->AddBody(sphere, 10.0f);
 
 	// TODO 5: Add this module to the list of collision listeners
 
