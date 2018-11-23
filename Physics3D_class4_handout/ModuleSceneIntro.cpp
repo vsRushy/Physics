@@ -21,6 +21,14 @@ bool ModuleSceneIntro::Start()
 	App->camera->LookAt(vec3(0, 0, 0));
 
 	// TODO 2: Chain few N spheres together to form a snake
+	Sphere s1, s2;
+	s1.radius = 1.0f;
+	s1.SetPos(3.0f, 3.0f, 3.0f);
+	s2.radius = 1.0f;
+	s2.SetPos(3.0f, 3.0f, 3.0f);
+	pb_snake[0] = App->physics->AddBody(s1);
+	pb_snake[1] = App->physics->AddBody(s2);
+	App->physics->AddConstraintP2P(*pb_snake[0], *pb_snake[1], vec3(1.0f, 0.0f, 0.0f), vec3(-1.0f, 0.0f, 0.0f));
 
 	// TODO 4: Chain few N spheres together to form a a bike's sphere
 	// Be sure to put the right axis
