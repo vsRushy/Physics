@@ -172,6 +172,13 @@ bool ModulePhysics3D::CleanUp()
 	bodies.clear();
 
 	// TODO: Remember to clean free all memeory from constraints
+	p2List_item<btTypedConstraint*>* c_item = constraints.getFirst();
+	while (c_item)
+	{
+		delete c_item->data;
+		c_item = c_item->next;
+	}
+	constraints.clear();
 
 	delete world;
 
@@ -242,4 +249,14 @@ void DebugDrawer::setDebugMode(int debugMode)
 int	 DebugDrawer::getDebugMode() const
 {
 	return mode;
+}
+
+// ---------------------------------------------------
+void ModulePhysics3D::AddConstraintP2P(PhysBody3D& bodyA, PhysBody3D& bodyB, const vec3& anchorA, const vec3& anchorB)
+{
+	const btVector3 vec1(anchorA.x, anchorA.y, anchorA.z);
+	const btVector3 vec2(anchorB.x, anchorB.y, anchorB.z);
+
+	btTypedConstraint* p = new btPoint2PointConstraint(*bodyA.body, *bodyB.body, vec1, vec2);
+	world->addConstraint(p);
 }
